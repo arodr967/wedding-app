@@ -6,11 +6,11 @@ const ObjectID = require('mongodb').ObjectID;
 // Connect
 const connection = (closure) => {
     return MongoClient.connect(
-      'mongodb://localhost:27017',
+      'mongodb://alicia:alicia1@ds129831.mlab.com:29831',
       { useNewUrlParser: true },
       (err, client) => {
         if (err) throw err;
-        var db = client.db('wed');
+        var db = client.db('patel-wed');
         closure(db);
       }
     );
