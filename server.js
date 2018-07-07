@@ -1,41 +1,31 @@
-// Get dependencies
 const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
-const bodyParser = require('body-parser');
-
-// Get our API routes
-const api = require('./server/routes/api');
-
 const app = express();
 
-// Parsers for POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// API file for interacting with MongoDB
+const api = require('./server/routes/api');
 
-// Point static path to dist
+// Parsers
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false}));
+
+// Angular DIST output folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Set our api routes
+// API location
 app.use('/api', api);
 
-// Catch all other routes and return the index file
+// Send all other requests to the Angular app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-/**
- * Get port from environment and store in Express.
- */
+// Set Port
 const port = process.env.PORT || '3000';
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
 const server = http.createServer(app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-server.listen(port, () => console.log(`API running on localhost:${port}`));
+server.listen(port, () => console.log(`Running on localhost:${port}`));

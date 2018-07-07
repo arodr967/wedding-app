@@ -1,32 +1,47 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
 const router = express.Router();
-const API = 'mongodb://127.0.0.1:27017';
+const MongoClient = require('mongodb').MongoClient;
+const ObjectID = require('mongodb').ObjectID;
 
-mongoose.connect(API);
+// Connect
+const connection = (closure) => {
+    return MongoClient.connect(
+      'mongodb://localhost:27017',
+      { useNewUrlParser: true },
+      (err, client) => {
+        if (err) throw err;
+        var db = client.db('wed');
+        closure(db);
+      }
+    );
+};
 
-const Guest = require('../models/guest');
-const guest1 = new Guest({
-  firstName: 'Alicia',
-  lastName: 'Rodriguez',
-  code: '123'
-});
-guest1.save(err => {
-  if (err) throw err;
-  console.log('GUEST SAVED!');
-});
+// Error handling
+const sendError = (err, res) => {
+    response.status = 501;
+    response.message = typeof err == 'object' ? err.message : err;
+    res.status(501).json(response);
+};
 
-/* GET api listing. */
-router.get('/', (req, res) => {
-  res.send('api works');
-});
+// Response handling
+let response = {
+    status: 200,
+    data: [],
+    message: null
+};
 
+// Get guests
 router.get('/guests', (req, res) => {
-  Guest.find({}, (err, guests) => {
-    if (err) throw err;
-    res.status(200).json(guests);
-  });
+    connection((db) => {
+        db.collection('guests')
+            .find()
+            .toArray()
+            .then((guests) => {
+                response.data = guests;
+                res.json(response);
+            })
+            .catch(err => sendError(err, res));
+    });
 });
 
 module.exports = router;

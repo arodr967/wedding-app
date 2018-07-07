@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { HomeService } from './home/services/home.service';
+import { HomeService } from '../../services/home.service';
 
 @Component({
-  selector: 'app-root',
-  template:  `
-    <h1>
-      {{title}}
-    </h1>
+  selector: 'app-home',
+  template: `
+    <p>
+      home works!
+    </p>
   `,
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./home.component.css']
 })
-export class AppComponent implements OnInit {
-  title = 'app works!';
+export class HomeComponent implements OnInit {
 
   constructor(private homeService: HomeService) { }
 
@@ -21,4 +20,5 @@ export class AppComponent implements OnInit {
         console.log('data', data);
       });
   }
+
 }
