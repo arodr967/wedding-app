@@ -2,15 +2,16 @@ const express = require('express');
 const router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
+const config = require('../../config/database');
 
 // Connect
 const connection = (closure) => {
     return MongoClient.connect(
-      'mongodb://alicia:alicia1@ds129831.mlab.com:29831',
-      { useNewUrlParser: true },
+      config.databaseUrl,
+      config.databaseOptions,
       (err, client) => {
         if (err) throw err;
-        var db = client.db('patel-wed');
+        var db = client.db(config.databaseName);
         closure(db);
       }
     );
